@@ -1,0 +1,6 @@
+[
+    { "id": 1, "name": "Mickey Mouse", "age": 2, "breed": "Sphynx" },
+    { "id": 2, "name": "Snowball", "age": 3, "breed": "Birman" },
+    { "id": 3, "name": "Whiskers", "age": 4, "breed": "Maine Coon" }
+  ]
+  

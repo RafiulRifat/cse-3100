@@ -3,6 +3,7 @@ import { Link, Outlet } from 'react-router-dom';
 const BaseLayout = () => {
   return (
     <div className="layout">
+      {/* Header */}
       <header className="d-flex align-items-center bg-light">
         <h1>
           <Link className="text-decoration-none text-dark" to="/">
@@ -17,12 +18,26 @@ const BaseLayout = () => {
                 Available Cats
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/about">
+                About Us
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/contact">
+                Contact Us
+              </Link>
+            </li>
           </ul>
         </nav>
       </header>
+
+      {/* Main content */}
       <main id="content">
         <Outlet />
       </main>
+
+      {/* Footer */}
       <footer className="bg-light">
         <p>© Copyright 2024</p>
       </footer>

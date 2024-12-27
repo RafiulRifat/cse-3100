@@ -8,20 +8,24 @@ const featuredCats = [
 
 export default function Home() {
   const [cats, setCats] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    // Fetch cat images from an API endpoint and assign it to the featuredCats list
     const fetchCatImages = async () => {
       try {
         const responses = await Promise.all(featuredCats.map(() => fetch('https://api.thecatapi.com/v1/images/search').then((res) => res.json())));
         const catsWithImages = featuredCats.map((cat, index) => ({
           ...cat,
-          image: responses[index][0].url,
+          image: responses[index][0]?.url || '/default-cat.jpg', // Fallback image
         }));
 
         setCats(catsWithImages);
       } catch (error) {
         console.error('Error fetching cat images:', error);
+        setError(true);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -30,30 +34,39 @@ export default function Home() {
 
   return (
     <>
+      {/* Welcome Section */}
       <section className="text-center mt-4">
         <h2>Welcome to Purrfect Adoption</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luc Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luc Lorem
-          ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luc
-        </p>
+        <p>Looking for the perfect companion? Explore our featured cats and find your next furry friend today!</p>
       </section>
 
+      {/* Featured Cats Section */}
       <section className="mt-5">
-        <h2>Featured cats</h2>
-        <div className="mt-2 row g-4" id="cats-container"></div>
-        <div className="mt-2 row g-4" id="cats-container">
-          {cats.map((cat, i) => (
-            <div key={i} className="col-md-4">
-              <div className="cat-card">
-                <img src={cat.image} alt={cat.name} className="img-fluid mb-2" style={{ borderRadius: '8px', height: '200px', objectFit: 'cover' }} />
-                <div className="cat-info">
-                  <h3 className="h5 mb-1">{cat.name}</h3>
-                  <p className="mb-0">Age: {cat.age}</p>
+        <h2>Featured Cats</h2>
+        {loading ? (
+          <div className="text-center mt-4">
+            <p>Loading cats...</p>
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        ) : error ? (
+          <p className="text-danger">Sorry, we couldn't load the cat images at the moment. Please try again later.</p>
+        ) : (
+          <div className="mt-2 row g-4" id="cats-container">
+            {cats.map((cat, i) => (
+              <div key={i} className="col-md-4">
+                <div className="card shadow-sm">
+                  <img src={cat.image} alt={cat.name} className="card-img-top img-fluid" style={{ height: '200px', objectFit: 'cover' }} />
+                  <div className="card-body text-center">
+                    <h5 className="card-title">{cat.name}</h5>
+                    <p className="card-text">Age: {cat.age}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </>
   );
